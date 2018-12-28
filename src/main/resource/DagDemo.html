@@ -1,0 +1,156 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 Demo: Sentence Tokenization</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="d3.min.js" charset="utf-8"></script>
+<script src="dagre-d3.js"></script>
+<script src="diag.js"></script>
+
+
+<style id="css">
+    /* This sets the color for "TK" nodes to a light blue green. */
+
+    g.type-suss>rect {
+        fill: #ddefd3;
+    }
+
+    .node text {
+        font-weight: 300;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+        font-size: 12px;
+        pointer-events: none;
+        text-anchor: middle;
+        fill: white;
+    }
+
+    .label g text tspan:last-child {
+        font-size: 10px;
+        margin-top: 5px;
+        dy: 1.5em;
+    }
+
+    .label g {
+        transform: translate(0, -13px);
+    }
+
+    .node rect {
+        fill: white;
+        stroke-width: 0px;
+        color: white;
+    }
+
+    .edgePath path {
+        stroke: rgb(78, 78, 78);
+        stroke-width: 1px;
+    }
+
+    g.type-suss>rect {
+        fill: rgba(0, 91, 252, 0.4);
+    }
+
+    g.type-ready>rect {
+        fill: rgba(0, 91, 252, 0.6);
+    }
+
+    g.type-queue>rect {
+        fill: rgba(0, 91, 252, 0.8);
+    }
+
+    g.type-run>rect {
+        fill: rgba(0, 91, 252, 1);
+    }
+
+    g.type-suss>rect {
+        fill: #3EBB44;
+    }
+
+    g.type-fail>rect {
+        fill: #E93A3A;
+
+    }
+
+    g.type-freeze>rect {
+        fill: #f2f3f7;
+    }
+
+    .type-freeze text {
+        fill: #999999;
+    }
+    #myMenu{
+        position: absolute;
+        display: none;
+        width: 100px;
+        height: 100px;
+        background: #999999;
+    }
+</style>
+
+<svg id="svgCanvas" width=960 height=900></svg>
+<ul id="myMenu">
+    <li>xx</li>
+    <li>xx</li>
+</ul>
+
+<script id="js">
+    var state = [
+        { id: 1, label: 'V1\n数据同步', class: 'type-suss' },
+        { id: 2, label: 'V2\nhive-sql', class: 'type-suss' },
+        { id: 3, label: 'V3\nspark-sql', class: 'type-suss' },
+        { id: 4, label: 'V4\nshell', class: 'type-suss' },
+        { id: 5, label: 'V5\npython', class: 'type-suss' },
+        { id: 6, label: 'V6\n虚节点', class: 'type-suss' },
+        { id: 7, label: 'V7\nspark-sql', class: 'type-suss' },
+        { id: 8, label: 'V8\nshell', class: 'type-suss' },
+        { id: 9, label: 'V9\n数据同步', class: 'type-suss' },
+        { id: 10, label: 'V10\nshell', class: 'type-suss' },
+        { id: 11, label: 'V11\nspark-sql', class: 'type-run' },
+        { id: 12, label: 'V12\nspark-sql', class: 'type-suss' },
+        { id: 13, label: 'V13\n虚节点', class: 'type-suss' },
+        { id: 14, label: 'V14\n丁福海', class: 'type-suss' },
+        { id: 0, label: 'V15\nhive-sql', class: 'type-suss' },
+    ]
+    var edg = [
+        { start: 1, end: 4, option: {} },
+        { start: 1, end: 3, option: {} },
+        { start: 1, end: 2, option: {} },
+        { start: 6, end: 7, option: {} },
+        { start: 1, end: 6, option: {} },
+        { start: 9, end: 10, option: {} },
+        { start: 8, end: 9, option: {} },
+        { start: 11, end: 12, option: {} },
+        { start: 0, end: 11, option: {} },
+        { start: 0, end: 8, option: {} },
+        { start: 0, end: 5, option: {} },
+        { start: 0, end: 14, option: {} },
+        { start: 0, end: 13, option: {} },
+        { start: 0, end: 1, option: {} }
+    ]
+    var statePoint = 1; // 当前选中的点
+    diagGraph.init(statePoint, state, edg); //创建关系图
+
+    var svgCanvas = document.getElementById('svgCanvas'); //绑定事件鼠标点击
+    svgCanvas.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (e.target.tagName === 'rect') {
+            diagGraph.changePoint(e.target.parentNode.id);
+        }
+    })
+
+
+    var myMenu = document.getElementById("myMenu"); //鼠标右键
+    svgCanvas.addEventListener("contextmenu", (event) => { //鼠标右击事件
+        event.preventDefault();
+    if (event.target.tagName === 'rect') {
+        myMenu.style.top = event.clientY + "px";
+        myMenu.style.left = event.clientX + "px";
+        myMenu.style.display = 'block'
+        // this.myMenuShow = true
+    }
+    });
+    document.addEventListener("click", (event) => {
+        myMenu.style.display = 'none'
+    });
+
+</script>
